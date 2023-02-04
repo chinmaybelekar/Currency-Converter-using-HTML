@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title> Currency Converter </title>
+			<style>
+				* { font-size: 40px; font-family: Arial, Courier;}
+				body { background-color: lightblue; }
+				input { text-align:center; }
+			</style>
+			<script>
+				function convert()
+				{
+					event.preventDefault();
+					let usd = document.getElementById("usd");
+					let ans = document.getElementById("ans");
+
+					if (usd.value.length == 0)
+					{
+						alert("You need to enter amount: ");
+						ans.innerHTML = "";
+						usd.focus();
+						return;
+					}
+
+				let amt = parseFloat(usd.value);
+
+				if ( amt <= 0.0)
+				{
+					alert("Invalid Amount: ");
+					ans.innerHTML = "";
+					usd.value = "";
+					usd.focus();
+					return;
+				}
+				
+				let urladd = "https://api.exchangerate-api.com/v4/latest/USD"
+				fetch(urladd)
+				.then (res => res.json())
+				.then (data => {
+					let inr = amt * data.rates.INR;
+					let msg = "amt in &#8377;" + inr.toFixed(2);
+					ans.innerHTML = msg;
+
+				})
+				.catch(err => ans.innerHTML = "issue" + err);
+				}
+			</script>
+	</head>
+	<body>
+	<center>
+		<h1> Currency Converter </h1>
+		<form onsubmit="return convert()">
+			<input type="number" step="any" id="usd" placeholder="Enter Amount in $$" />
+		</form>
+		<h1 id="ans"> </h1>
+	</center>
+	</body>
+</html>
